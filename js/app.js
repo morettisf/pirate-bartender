@@ -1,161 +1,95 @@
 var drink = {}
+var qNum = 0
+var randomNum = Math.floor((Math.random() * 3) + 0)
 
-var protos = ['alcohol', 'salty', 'bitter', 'sweet', 'fruity']
+// defining questions constructor
+var questionAnswers = function(question, answers) {
+	this.question = question
+	this.answers = answers
+}
 
-var questionsList = [
+// filling questions / answers
+var q1 = new questionAnswers('How do ye like yer drinks?', ['Strong', 'Medium', 'Weak'])
+var q2 = new questionAnswers('Do ye like it with a salty tang?', ['Aye', 'Nar'])
+var q3 = new questionAnswers('Are ye a lubber who likes it bitter?', ['Aye', 'Nar'])
+var q4 = new questionAnswers('Would ye like a bit of sweetness with yer poison?', ['Aye', 'Nar'])
+var q5 = new questionAnswers('Are ye one for a fruity finish?', ['Aye', 'Nar'])
 
-	{ question : 'How do ye like yer drinks?',
-	answers : 
-	{ option1 : 'Strong', 
-	option2 : 'Medium', 
-	option3 : 'Weak' }
-	},
 
-	{ question : 'Do ye like it with a salty tang?',
-	answers :
-	{ option1 : 'Yes',
-	option2 : 'No' }
-	},
+// defining pantry constructor
+var pantryItem = function(category, ingredients) {
+	this.category = category
+	this.ingredients = ingredients
+}
 
-	{ question : 'Are ye a lubber who likes it bitter?',
-	answers :
-	{ option1 : 'Yes',
-	option2 : 'No' }
-	},
+// filling pantry
+var alcoholStrong = new pantryItem('strong', ['3 shots rum', '3 shots whisky', '3 shots gin'])
+var alcoholMedium = new pantryItem('medium', ['2 shots rum', '2 shots whisky', '2 shots gin'])
+var alcoholWeak = new pantryItem('weak', ['1 shots rum', '1 shots whisky', '1 shots gin'])
+var salty = new pantryItem('salty', ['Olive on a stick', 'Salt-dusted rim', 'Rasher of bacon'])
+var bitter = new pantryItem('bitter', ['Shake of bitters', 'Splash of tonic', 'Twist of lemon peel'])
+var sweet = new pantryItem('sweet', ['Sugar cube', 'Spoonful of honey', 'Splash of cola'])
+var fruity = new pantryItem('fruity', ['Slice of orange', 'Dash of cassis', 'Cherry on top'])
 
-	{ question : 'Would ye like a bit of sweetness with yer poison?',
-	answers :
-	{ option1 : 'Yes',
-	option2 : 'No' }
-	},
-
-	{ question : 'Are ye one for a fruity finish?',
-	answers :
-	{ option1 : 'Yes',
-	option2 : 'No' }
-	}
-]
-
-var pantry = [
-
-	{ alcohol : {
-		strong : [
-			{ ingredient : '3 shots rum' }, 
-			{ ingredient : '3 shots whisky' }, 
-			{ ingredient : '3 shots gin' } 
-			],
-		medium : [
-			{ ingredient : '2 shots rum' }, 
-			{ ingredient : '2 shots whisky' }, 
-			{ ingredient : '2 shots gin' } 
-			],
-		weak : [
-			{ ingredient : '1 shot rum' }, 
-			{ ingredient : '1 shot whisky' }, 
-			{ ingredient : '1 shot gin' }
-			]
-		}
-	},
-
-	{ salty : [
-		{ ingredient : 'Olive on a stick' }, 
-		{ ingredient : 'Salt-dusted rim' }, 
-		{ ingredient : 'Rasher of bacon' }
-		]
-	},
-
-	{ bitter : [
-		{ ingredient : 'Shake of bitters' }, 
-		{ ingredient : 'Splash of tonic' }, 
-		{ ingredient : 'Twist of lemon peel' }
-		]
-	},
-
-	{ sweet : [
-		{ ingredient : 'Sugar cube' }, 
-		{ ingredient : 'Spoonful of honey' }, 
-		{ ingredient : 'Splash of cola' }
-		]
-	},
-
-	{ fruity : [
-		[ { ingredient1 : 'Slice of orange' }, 
-		{ ingredient2 : 'Dash of cassis' }, 
-		{ ingredient3 : 'Cherry on top' } ]
-		]
-	}
-	
-]
 
 $(document).ready(function() {
 	runQuiz()
 })
 
-var qNum = 0
-var q
-var randomNum = Math.floor((Math.random() * 3) + 0)
-var alcoholIng = ''
-var saltyIng = ''
-var bitterIng = ''
-var sweetIng = ''
-var fruityIng = ''
 
 function runQuiz() {
+	
+	var questionRotation = [q1, q2, q3, q4, q5]
 
-	q = new asking(qNum)
+	var bartender = new asking(qNum)
 
-
+	// bartender constructer to display questions
 	function asking(ques) {
 		this.ques = ques
-		$('#question').html('<h2>' + questionsList[ques].question + '</h2>')
-
+		$('#question').html('<h2>' + questionRotation[ques].question + '</h2>')
 		$('#answers').html('<ul></ul>')
-		for (var key in questionsList[ques].answers) {
-			$('#answers ul').append('<li>' + questionsList[ques].answers[key] + '</li>')
-		}
+
+		questionRotation[ques].answers.forEach(function(answer) {
+			$('#answers ul').append('<li>' + answer + '</li>')
+		})
 
 		$('#answers li').click('li', function() {
 			var selected = $(this).text()
-//			q.protos[ques](selected)
-//			console.log(q.protos[ques](selected))
-
+//			bartender.protos[ques](selected)
+//			console.log(bartender.protos[ques](selected))
+//			var protos = ['alcohol', 'salty', 'bitter', 'sweet', 'fruity']
 			switch(ques) {
 				case 0 :
-				q.alcohol(selected)
+				bartender.alcohol(selected)
 				break
 				case 1 :
-				q.salty(selected)
+				bartender.salty(selected)
 				break
 				case 2 :
-				q.bitter(selected)
+				bartender.bitter(selected)
 				break
 				case 3 :
-				q.sweet(selected)
+				bartender.sweet(selected)
 				break
 				case 4 :
-				q.fruity(selected)
+				bartender.fruity(selected)
 				break
 			}
 		})
-
 	}
 
 	asking.prototype.alcohol = function(selected) {
 
 		if (selected === 'Strong') {
-			alcoholIng = pantry[0].alcohol.strong[randomNum].ingredient
-			drink.alcohol = alcoholIng
-	//		drink.push()
+			drink.alcohol = alcoholStrong.ingredients[randomNum]
 		}
 
 		else if (selected === 'Medium') {
-			alcoholIng = pantry[0].alcohol.medium[randomNum].ingredient
-			drink.alcohol = alcoholIng
+			drink.alcohol = alcoholMedium.ingredients[randomNum]
 		}
 
 		else {
-			alcoholIng = pantry[0].alcohol.weak[randomNum].ingredient
-			drink.alcohol = alcoholIng
+			drink.alcohol = alcoholWeak.ingredients[randomNum]
 		}
 
 		qNum++
@@ -165,9 +99,8 @@ function runQuiz() {
 
 	asking.prototype.salty = function(selected) {
 
-		if (selected === 'Yes') {
-			saltyIng = pantry[1].salty[randomNum].ingredient
-			drink.salty = saltyIng
+		if (selected === 'Aye') {
+			drink.salty = salty.ingredients[randomNum]
 		}
 
 		qNum++
@@ -175,9 +108,8 @@ function runQuiz() {
 	}
 
 	asking.prototype.bitter = function(selected) {
-		if (selected === 'Yes') {
-			bitterIng = pantry[2].bitter[randomNum].ingredient
-			drink.bitter = bitterIng
+		if (selected === 'Aye') {
+			drink.bitter = bitter.ingredients[randomNum]
 		}
 
 		qNum++
@@ -185,9 +117,8 @@ function runQuiz() {
 	}
 
 	asking.prototype.sweet = function(selected) {
-		if (selected === 'Yes') {
-			sweetIng = pantry[3].sweet[randomNum].ingredient
-			drink.sweet = sweetIng
+		if (selected === 'Aye') {
+			drink.sweet = sweet.ingredients[randomNum]
 		}
 
 		qNum++
@@ -195,16 +126,14 @@ function runQuiz() {
 	}
 
 	asking.prototype.fruity = function(selected) {
-		if (selected === 'Yes') {
-			fruityIng = pantry[4].fruity[randomNum].ingredient
-			drink.fruity = fruityIng
+		if (selected === 'Aye') {
+			drink.fruity = fruity.ingredients[randomNum]
 		}
 
 		runResult()
 	}
 
 	console.log(drink)
-
 }
 
 function runResult() {
