@@ -1,6 +1,6 @@
 var drink = {}
 var qNum = 0
-var randomNum = Math.floor((Math.random() * 3) + 0)
+var randomNum = Math.floor((Math.random() * 3))
 
 // defining questions constructor
 var questionAnswers = function(question, answers) {
@@ -9,7 +9,7 @@ var questionAnswers = function(question, answers) {
 }
 
 // filling questions / answers
-var q1 = new questionAnswers('How do ye like yer drinks?', ['Strong', 'Medium', 'Weak'])
+var q1 = new questionAnswers('How do ye take yer drinks?', ['Strong', 'Medium', 'Weak'])
 var q2 = new questionAnswers('Do ye like it with a salty tang?', ['Aye', 'Nar'])
 var q3 = new questionAnswers('Are ye a lubber who likes it bitter?', ['Aye', 'Nar'])
 var q4 = new questionAnswers('Would ye like a bit of sweetness with yer poison?', ['Aye', 'Nar'])
@@ -40,10 +40,9 @@ $(document).ready(function() {
 function runQuiz() {
 	
 	var questionRotation = [q1, q2, q3, q4, q5]
-
 	var bartender = new asking(qNum)
 
-	// bartender constructer to display questions
+	// asking constructer to display questions and answers
 	function asking(ques) {
 		this.ques = ques
 		$('#question').html('<h2>' + questionRotation[ques].question + '</h2>')
@@ -108,6 +107,7 @@ function runQuiz() {
 	}
 
 	asking.prototype.bitter = function(selected) {
+
 		if (selected === 'Aye') {
 			drink.bitter = bitter.ingredients[randomNum]
 		}
@@ -117,6 +117,7 @@ function runQuiz() {
 	}
 
 	asking.prototype.sweet = function(selected) {
+
 		if (selected === 'Aye') {
 			drink.sweet = sweet.ingredients[randomNum]
 		}
@@ -126,6 +127,7 @@ function runQuiz() {
 	}
 
 	asking.prototype.fruity = function(selected) {
+
 		if (selected === 'Aye') {
 			drink.fruity = fruity.ingredients[randomNum]
 		}
@@ -137,10 +139,11 @@ function runQuiz() {
 }
 
 function runResult() {
-	$('body').html('')
+	$('main').html('')
 	var recipe = Object.values(drink)
+	$('main').append("<h2>Here's what be in thar drink...</h2>")
 	recipe.forEach(function(ing) {
-		$('body').append('<h2>' + ing + '</h2>')
+		$('main').append('<h3>' + ing + '</h3>')
 	})
 }
 
